@@ -5,6 +5,10 @@ import sqlite3
 import os
 import shutil
 import platform
+import customtkinter
+
+customtkinter.set_default_color_theme("dark-blue")  # Themes: "blue" (standard), "green", "dark-blue"
+customtkinter.set_appearance_mode("dark")
 
 if platform.system() == 'Windows':
     # Run code specific to Windows operating system
@@ -50,18 +54,18 @@ from open_streak import *
 
 def Streaker_the_second(root):
     global Streaker_the_second_page
-    Streaker_the_second_page = Tk()
+    Streaker_the_second_page = customtkinter.CTk()
     Streaker_the_second_page.title("Habit Tracker")
     Streaker_the_second_page.geometry("700x570")
 
     #Create a  frame
-    main_frame = Frame(Streaker_the_second_page)
+    main_frame = customtkinter.CTkFrame(master=Streaker_the_second_page)
     main_frame.grid(row=0,column=0,pady=10)
 
     # frame for streaks 
     #!Add a scrollbar to go through the created streaks if they don't fit on the screen
-    second_streak_frame = LabelFrame(main_frame,text="")
-    second_streak_frame.grid(row=1,column=0,pady=10,columnspan=3,ipadx=80,sticky="nsew")
+    second_streak_frame = customtkinter.CTkFrame(master=main_frame)
+    second_streak_frame.grid(row=1,column=0,pady=10,columnspan=6,ipadx=80,sticky="nsew")
 
     def create_streak_boxes():
             #Create a database 
@@ -90,11 +94,12 @@ def Streaker_the_second(root):
                 name_of_box = results[count][1]
 
                 #counter
-                counter_label = Label(second_streak_frame,text=count + 1)
+                # label = customtkinter.CTkLabel(master=second_streak_frame, text=count + 1)
+                counter_label = customtkinter.CTkLabel(master=second_streak_frame, text=count + 1)
                 counter_label.grid(row=count,column=1,pady=10)
                 
                 #Put button on main screen
-                streak_btn = Button(second_streak_frame, text=name_of_box,width=60, height=5, anchor="center", command=lambda name_of_box = name_of_box:openstreak(Streaker_the_second_page,name_of_box))
+                streak_btn = customtkinter.CTkButton(master=second_streak_frame, text=name_of_box, width=500, height=100, anchor="center", command=lambda name_of_box = name_of_box:openstreak(Streaker_the_second_page,name_of_box))
                 streak_btn.grid(row=count, column=2, pady=10, padx=10)
 
                 count += 1
@@ -112,11 +117,14 @@ def Streaker_the_second(root):
         Streaker_the_second_page.destroy()
 
     # top of main screen
-    title = Label(main_frame, text="Streaks", font=('monospace', 30))
+    title = customtkinter.CTkLabel(master=main_frame, text="Streaks", font=('monospace', 60))
     title.grid(row=0, column=0)
-    add_streak = Button(main_frame, text="Add Streak", command=lambda:addStreak(Streaker_the_second_page, second_streak_frame))
+    #buttons
+    # command=lambda:delStreak(Streaker_the_second_page,second_streak_frame)
+    add_streak = customtkinter.CTkButton(master=main_frame,fg_color="#38761d", hover_color="#739F60", text="Add Streak", command=lambda:addStreak(Streaker_the_second_page, second_streak_frame))
     add_streak.grid(row=0, column=1, padx=70)
-    del_streak = Button(main_frame, text="Delete Streak", command=lambda:delStreak(Streaker_the_second_page,second_streak_frame))
+
+    del_streak = customtkinter.CTkButton(master=main_frame, fg_color="#38761d", hover_color="#739F60", text="Delete Streak", command=lambda:delStreak(Streaker_the_second_page,second_streak_frame))
     del_streak.grid(row=0, column=2)
 
     # Catch the WM_DELETE_WINDOW event
@@ -126,17 +134,20 @@ def Streaker_the_second(root):
 def delStreak(root, streak_frame):
     global delStreak_page
     delStreak_page = Toplevel()
+    delStreak_page.config(bg="#252525")
     delStreak_page.title("Delete Streak")
     delStreak_page.geometry("600x570")
     root.withdraw()
 
-    delStreak_frame = Frame(delStreak_page)
+    # frame = customtkinter.CTkFrame(master=delStreak_page)
+    delStreak_frame = customtkinter.CTkFrame(master=delStreak_page)
     delStreak_frame.grid(row=0,column=0,pady=10,padx=5)
 
     #labels and entry boxes
-    streak_name_label = Label(delStreak_frame,text="Enter name of Streak: ")
+    # 
+    streak_name_label = customtkinter.CTkLabel(master=delStreak_frame, text="Enter name of Streak: ")
     streak_name_label.grid(row=0,column=0,pady=10)
-    streak_name_entry = Entry(delStreak_frame)
+    streak_name_entry = customtkinter.CTkEntry(master=delStreak_frame, placeholder_text="Enter the Name of your Streak", width=300, height=40)
     streak_name_entry.grid(row=0,column=1,pady=10)
 
     # --------------------------functions-----------------
@@ -183,7 +194,8 @@ def delStreak(root, streak_frame):
 
 
     # --------------------Buttons-------------------------
-    del_streak_btn = Button(delStreak_frame, text="Delete Streak", command=Drop_it)
+    # 
+    del_streak_btn = customtkinter.CTkButton(master=delStreak_frame, text="Delete Streak", fg_color="#38761d", hover_color="#739F60", command=Drop_it)
     del_streak_btn.grid(row=2, column=0)
 
     # Catch the WM_DELETE_WINDOW event
