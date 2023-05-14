@@ -5,7 +5,10 @@ import sqlite3
 import os
 import shutil
 import platform
+import customtkinter
 
+customtkinter.set_default_color_theme("dark-blue")  # Themes: "blue" (standard), "green", "dark-blue"
+customtkinter.set_appearance_mode("dark")
 
 if platform.system() == 'Windows':
     # Run code specific to Windows operating system
@@ -59,19 +62,21 @@ from add_streak import *
 from del_streak import *
 from open_streak import *
 
-root = Tk()
+root = customtkinter.CTk()
 root.title('Habbit Tracker')
 root.geometry('700x570')
 root.resizable(False, False)
 
 #Create a  frame
-main_frame = Frame(root)
+main_frame = customtkinter.CTkFrame(master=root)
 main_frame.grid(row=0,column=0,pady=10)
 
 # frame for streaks 
 #!Add a scrollbar to go through the created streaks if they don't fit on the screen
-streak_frame = LabelFrame(main_frame,text="")
-streak_frame.grid(row=1,column=0,pady=10,columnspan=3,ipadx=80,sticky="nsew")
+# customtkinter.CTkFrame(master=main_frame)
+streak_frame = customtkinter.CTkFrame(master=main_frame)
+streak_frame.grid(row=1,column=0,pady=10,columnspan=6,ipadx=80,sticky="nsew")
+
 
 
 def create_streak_boxes():
@@ -99,13 +104,34 @@ def create_streak_boxes():
     
 
         name_of_box = results[count][1]
-        
-        counter_label = Label(streak_frame,text=count + 1)
+
+        #get no of days in a streak
+        c.execute("SELECT rowid, * FROM STREAKS WHERE name = ?", (name_of_box,))
+        resoz = c.fetchall()
+        days = resoz[0][2]
+        print("Days: ")
+        print(days)
+
+        # Create table name for Xed buttons
+        Xed_btns = name_of_box + "Details"
+        c.execute(f"SELECT * FROM {Xed_btns}")
+        already_Xed = c.fetchall()
+        print("List of Xed: ")
+        print(already_Xed) #create a list of non repeated days from this
+        no_of_Xed = len(already_Xed)
+        print("No of Xed: ")
+        print(no_of_Xed)
+
+        counter_label = customtkinter.CTkLabel(master=streak_frame, text=count + 1)
         counter_label.grid(row=count,column=1,pady=10)
+
+        percentage_label = customtkinter.CTkLabel(master=streak_frame, text=" ")
+        counter_label.grid(row=count,column=3,pady=10)
         
         #Put button on main screen
-        streak_btn = Button(streak_frame, text=name_of_box,width=60, height=5, anchor="center", command=lambda name_of_box = name_of_box:openstreak(root,name_of_box))
-        streak_btn.grid(row=count, column=2, pady=10, padx=10)
+        streak_btn = customtkinter.CTkButton(master=streak_frame, text=name_of_box, width=500, height=100, anchor="center", command=lambda name_of_box = name_of_box:openstreak(root,name_of_box))
+
+        streak_btn.grid(row=count, column=2, pady=10, padx=10, columnspan=3)
 
         count += 1
 
@@ -118,13 +144,14 @@ def create_streak_boxes():
 create_streak_boxes()
 
 # top of main screen
-title = Label(main_frame, text="Streaks", font=('monospace', 30))
+title = customtkinter.CTkLabel(master=main_frame, text="Streaks", font=('monospace', 60))
 title.grid(row=0, column=0)
 
-add_streak = Button(main_frame, text="Add Streak", command=lambda:addStreak(root, streak_frame))
+# buttons 
+add_streak = customtkinter.CTkButton(master=main_frame,fg_color="#38761d", hover_color="#739F60", text="Add Streak", command=lambda:addStreak(root, streak_frame))
 add_streak.grid(row=0, column=1, padx=70)
 
-del_streak = Button(main_frame, text="Delete Streak", command=lambda:delStreak(root,streak_frame))
+del_streak = customtkinter.CTkButton(master=main_frame, fg_color="#38761d", hover_color="#739F60", text="Delete Streak", command=lambda:delStreak(root,streak_frame))
 del_streak.grid(row=0, column=2)
 
 root.mainloop()
