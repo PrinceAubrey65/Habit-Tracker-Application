@@ -5,6 +5,10 @@ import sqlite3
 import os
 import shutil
 import platform
+import customtkinter
+
+customtkinter.set_default_color_theme("dark-blue")  # Themes: "blue" (standard), "green", "dark-blue"
+customtkinter.set_appearance_mode("dark")
 
 if platform.system() == 'Windows':
     # Run code specific to Windows operating system
@@ -70,12 +74,12 @@ def create_streak_boxes(root,streak_frame):
         name_of_box = results[count][1]
 
         #counter
-        counter_label = Label(streak_frame,text=count + 1)
+        counter_label = customtkinter.CTkLabel(master=streak_frame, text=count + 1)
         counter_label.grid(row=count,column=1,pady=10)
         
         #Put button on main screen
-        streak_btn = Button(streak_frame, text=name_of_box,width=60, height=5, anchor="center", command=lambda name_of_box = name_of_box:openstreak(root,name_of_box))
-        streak_btn.grid(row=count, column=2, pady=10, padx=10)
+        streak_btn = customtkinter.CTkButton(master=streak_frame, text=name_of_box, width=500, height=100, anchor="center", command=lambda name_of_box = name_of_box:openstreak(root,name_of_box))
+        streak_btn.grid(row=count, column=2, pady=10, padx=10, columnspan=3)
 
         count += 1
 
@@ -90,22 +94,23 @@ def create_streak_boxes(root,streak_frame):
 def addStreak(root,streak_frame):
     global add_streak_page
     add_streak_page = Toplevel()
+    add_streak_page.config(bg="#252525")
     add_streak_page.title("Add a Streak")
     add_streak_page.geometry("600x570")
     root.withdraw()
 
-    add_streak_frame = Frame(add_streak_page)
+    add_streak_frame = customtkinter.CTkFrame(master=add_streak_page)
     add_streak_frame.grid(row=0,column=0,pady=10,padx=5)
 
     #labels and entry boxes
-    streak_name_label = Label(add_streak_frame,text="Name of Streak: ")
+    streak_name_label = customtkinter.CTkLabel(master=add_streak_frame, text="Name of Streak: ")
     streak_name_label.grid(row=0,column=0,pady=10)
-    streak_name_entry = Entry(add_streak_frame)
+    streak_name_entry = customtkinter.CTkEntry(master=add_streak_frame, placeholder_text="Enter the Name of your Streak", width=300, height=40)
     streak_name_entry.grid(row=0,column=1,pady=10)
 
-    length_label = Label(add_streak_frame,text="Number of Days: ")
+    length_label = customtkinter.CTkLabel(master=add_streak_frame, text="Number of Days: ")
     length_label.grid(row=1,column=0,pady=10)
-    length_entry = Entry(add_streak_frame)
+    length_entry = customtkinter.CTkEntry(master=add_streak_frame, placeholder_text="Enter Number of Days", width=300, height=40)
     length_entry.grid(row=1,column=1,pady=10)
 
     #-----------------------functions ------------------
@@ -140,14 +145,14 @@ def addStreak(root,streak_frame):
         # Number of Days
         Days = length_entry.get()
 
-        if int(Days) > 64 :
-            messagebox.showinfo("ALERT", "Only Pro version can allow streaks longer than 64 days.\nContact Developer for more information.\nWhatsapp: 0778728406\nEmail:\nnuwagabaprinceaubrey@gmail.com")
-            return
+        
 
         if len(Days.replace(" ","")) < 1 or  len(StreakName.replace(" ","")) < 1: 
                 messagebox.showinfo("ALERT!","Fill in all entry boxes!")
                 return
-
+        if int(Days) > 64 :
+            messagebox.showinfo("ALERT", "Only Pro version can allow streaks longer than 64 days.\nContact Developer for more information.\nWhatsapp: 0778728406\nEmail:\nnuwagabaprinceaubrey@gmail.com")
+            return
 
         #Create table for streak names
         c.execute("CREATE TABLE IF NOT EXISTS STREAKS (name TEXT, days INTEGER)")
@@ -173,7 +178,7 @@ def addStreak(root,streak_frame):
         return
 
     # buttons
-    create_streak_btn = Button(add_streak_frame, text="Create Streak", command=create_streak)
+    create_streak_btn = customtkinter.CTkButton(master=add_streak_frame, text="Create Streak",fg_color="#38761d", hover_color="#739F60", command=create_streak)
     create_streak_btn.grid(row=2, column=0)
 
     # Catch the WM_DELETE_WINDOW event
