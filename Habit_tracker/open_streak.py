@@ -5,6 +5,10 @@ import sqlite3
 import os
 import shutil
 import platform
+import customtkinter
+
+customtkinter.set_default_color_theme("dark-blue")  # Themes: "blue" (standard), "green", "dark-blue"
+customtkinter.set_appearance_mode("dark")
 
 if platform.system() == 'Windows':
     # Run code specific to Windows operating system
@@ -46,7 +50,8 @@ else:
 def openstreak(root, streak_name):
         btns = []
         def crosser(btn_number):
-                text_on_btn = day_btn["text"]
+                # text_on_btn = day_btn["text"]
+                text_on_btn = day_btn.cget("text")
 
                 btns[btn_number -1].configure(text="X")
 
@@ -78,6 +83,7 @@ def openstreak(root, streak_name):
 
         global open_streak_page
         open_streak_page = Toplevel()
+        open_streak_page.config(bg="#252525")
         open_streak_page.title("Add a Streak")
         open_streak_page.geometry("700x570")
         root.withdraw()
@@ -138,7 +144,8 @@ def openstreak(root, streak_name):
                         break
 
                 #Put button on main screen
-                day_btn = Button(open_streak_page, text="{}".format(counter),command=lambda counter = counter:crosser(counter))
+                # button = customtkinter.CTkButton(master=open_streak_page, text="{}".format(counter), command=lambda counter = counter:crosser(counter))
+                day_btn = customtkinter.CTkButton(master=open_streak_page, text="{}".format(counter), width=47, command=lambda counter = counter:crosser(counter))
                 day_btn.grid(row=row_break, column=col_restart, padx=10, pady=10, ipadx=10, ipady=10)
 
                 btns.append(day_btn)
